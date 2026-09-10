@@ -57,9 +57,7 @@ function Card({ p, onOpen }: { p: Project; onOpen: () => void }) {
         src={p.thumbnail}
         alt={p.title}
         loading="lazy"
-        className={`absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.07] ${
-          p.video && hovered ? "opacity-0" : "opacity-100"
-        }`}
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-out group-hover:scale-[1.07]"
       />
 
       {/* hover video preview for attached reel */}
@@ -149,6 +147,7 @@ function ReelPlayer({ p }: { p: Project }) {
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isWide, setIsWide] = useState(false);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -161,7 +160,9 @@ function ReelPlayer({ p }: { p: Project }) {
         .catch(() => {
           v.muted = true;
           setIsMuted(true);
-          v.play().catch(() => setIsPlaying(false));
+          v.play()
+            .then(() => setIsPlaying(true))
+            .catch(() => setIsPlaying(false));
         });
     }
   }, [p.video]);
@@ -170,8 +171,13 @@ function ReelPlayer({ p }: { p: Project }) {
     const v = videoRef.current;
     if (!v) return;
     if (v.paused) {
-      v.play();
-      setIsPlaying(true);
+      v.play()
+        .then(() => setIsPlaying(true))
+        .catch(() => {
+          v.muted = true;
+          setIsMuted(true);
+          v.play().catch(() => {});
+        });
     } else {
       v.pause();
       setIsPlaying(false);
@@ -194,7 +200,12 @@ function ReelPlayer({ p }: { p: Project }) {
 
   const handleLoadedMetadata = () => {
     const v = videoRef.current;
-    if (v && v.duration) setDuration(v.duration);
+    if (v) {
+      if (v.duration) setDuration(v.duration);
+      if (v.videoWidth && v.videoHeight) {
+        setIsWide(v.videoWidth > v.videoHeight);
+      }
+    }
   };
 
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -219,8 +230,7 @@ function ReelPlayer({ p }: { p: Project }) {
     const v = videoRef.current;
     if (!v) return;
     v.currentTime = 0;
-    v.play();
-    setIsPlaying(true);
+    v.play().then(() => setIsPlaying(true)).catch(() => {});
   };
 
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
@@ -228,8 +238,19 @@ function ReelPlayer({ p }: { p: Project }) {
   return (
     <div
       ref={containerRef}
-      className="group/player relative aspect-[9/16] max-h-[72vh] w-full overflow-hidden bg-black md:aspect-auto md:min-h-[560px] select-none"
+      className="group/player relative aspect-[9/16] max-h-[72vh] w-full overflow-hidden bg-black md:aspect-auto md:min-h-[560px] select-none flex items-center justify-center"
     >
+      {/* Ambient background for wide videos */}
+      {isWide && (
+        <video
+          src={p.video}
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover blur-2xl opacity-40 scale-110 pointer-events-none"
+        />
+      )}
+
       {/* HTML5 Video element */}
       <video
         ref={videoRef}
@@ -237,21 +258,26 @@ function ReelPlayer({ p }: { p: Project }) {
         poster={p.thumbnail}
         loop
         playsInline
+        preload="auto"
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onClick={togglePlay}
-        className="absolute inset-0 h-full w-full object-cover cursor-pointer"
+        className={`relative z-10 h-full w-full ${
+          isWide ? "object-contain" : "object-cover"
+        } cursor-pointer`}
       />
 
       {/* Apple glass gradient shadows */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/60" />
+      <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/95 via-transparent to-black/60" />
 
       {/* Top bar indicators */}
       <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-4">
         <div className="flex items-center gap-2">
           <span className="flex items-center gap-1.5 rounded-full apple-glass-pill px-3 py-1 font-mono text-[10px] tracking-wider text-white/95">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            9:16 PRO REEL
+            {isWide ? "MASTER COMMERCIAL CUT" : "9:16 PRO REEL"}
           </span>
         </div>
         <button
@@ -460,7 +486,7 @@ export default function Work() {
           </Reveal>
         </div>
 
-        {/* grid with all 6 real project reels */}
+        {/* grid with all real project reels */}
         <motion.div layout className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
             {projects.map((p) => (

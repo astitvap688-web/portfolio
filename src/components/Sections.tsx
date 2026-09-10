@@ -137,22 +137,22 @@ export function Process() {
         </div>
 
         <div ref={ref} className="relative mt-16">
-          {/* progress track (desktop) */}
-          <div className="absolute top-[52px] right-0 left-0 z-0 hidden h-px bg-white/10 lg:block">
+          {/* progress track (desktop) - positioned behind centered icon nodes */}
+          <div className="absolute top-[62px] left-7 right-7 z-0 hidden h-px bg-white/10 lg:block pointer-events-none">
             <motion.div
               className="h-full origin-left bg-gradient-to-r from-violet-500 via-purple-400 to-cyan-400 shadow-[0_0_12px_rgba(139,92,246,0.8)]"
               style={{ scaleX: line }}
             />
           </div>
-          {/* progress track (mobile) */}
-          <div className="absolute top-2 bottom-2 left-[27px] w-px bg-white/10 lg:hidden">
+          {/* progress track (mobile) - positioned behind icon nodes */}
+          <div className="absolute top-7 bottom-7 left-7 z-0 w-px bg-white/10 lg:hidden pointer-events-none">
             <motion.div
               className="w-full origin-top bg-gradient-to-b from-violet-500 to-purple-500"
               style={{ height: pct }}
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-4 lg:gap-6">
+          <div className="relative z-10 grid grid-cols-1 gap-10 lg:grid-cols-4 lg:gap-6">
             {processSteps.map((s, i) => {
               const Icon = processIcons[i];
               return (
@@ -164,11 +164,11 @@ export function Process() {
                   transition={{ duration: 0.8, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
                   className="relative pl-20 lg:pl-0 lg:pt-24"
                 >
-                  {/* node */}
+                  {/* node - opaque background sits over the line */}
                   <div className="absolute top-0 left-0 z-10 lg:top-[34px] lg:left-0">
-                    <span className="relative grid h-14 w-14 place-items-center rounded-2xl apple-glass-pill shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+                    <span className="relative grid h-14 w-14 place-items-center rounded-2xl bg-[#090910] border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.18)]">
                       <Icon className="h-5 w-5 text-white/90" />
-                      <span className="font-mono absolute -top-2 -right-2 grid h-6 w-6 place-items-center rounded-full bg-gradient-to-r from-violet-600 to-purple-600 text-[10px] font-bold text-white shadow-[0_0_15px_rgba(139,92,246,0.6)]">
+                      <span className="font-mono absolute -top-2 -right-2 z-20 grid h-6 w-6 place-items-center rounded-full bg-gradient-to-r from-violet-600 to-purple-600 text-[10px] font-bold text-white shadow-[0_0_15px_rgba(139,92,246,0.7)]">
                         {i + 1}
                       </span>
                     </span>

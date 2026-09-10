@@ -132,6 +132,34 @@ export const projects: Project[] = [
     badge: "• 4K COMMERCIAL",
     tags: ["Commercial", "Real Estate", "Kinetic Type", "Pacing"],
   },
+  {
+    id: "focusjet-commercial",
+    index: "07",
+    title: "FocusJet — Cinematic Tech Commercial",
+    category: "Commercial",
+    description: "High-end product commercial featuring macro camera tracks, studio lighting reflections, precision hardware detail & premium sound design.",
+    views: "2.4M views",
+    duration: "0:10",
+    retention: "96% retention",
+    thumbnail: "/reels/premium-cinematic-thumb.jpg",
+    video: "/reels/premium-cinematic.mp4",
+    badge: "• 3D COMMERCIAL • PRODUCT SPOT",
+    tags: ["Commercial", "Product 3D", "Cinematic", "FocusJet"],
+  },
+  {
+    id: "motion-identity",
+    index: "08",
+    title: "Motion Identity — 3D Projection & Intro",
+    category: "Motion",
+    description: "Dynamic personal branding intro featuring 3D mobile projection cone, sleek volumetric lighting and kinetic typography reveal.",
+    views: "1.9M views",
+    duration: "0:04",
+    retention: "98% retention",
+    thumbnail: "/reels/app-motion-thumb.jpg",
+    video: "/reels/app-motion.mp4",
+    badge: "• MOTION DESIGN • 3D INTRO",
+    tags: ["Motion Design", "3D Projection", "Branding", "Kinetic Type"],
+  },
 ];
 
 export const marqueeWords = ["EDIT", "MOTION", "STORY", "FLOW", "SHORT FORM"];
@@ -243,7 +271,7 @@ export const team = {
       name: "Astitva",
       role: "Video Editor",
       specialty: "High-Retention Pacing & Visual FX",
-      software: ["After Effects", "Premiere Pro", "DaVinci Resolve"],
+      software: ["After Effects", "Premiere Pro"],
       badge: "Lead Editor",
     },
     {
@@ -251,7 +279,7 @@ export const team = {
       name: "Naitik",
       role: "Video Editor",
       specialty: "Kinetic Motion Design & Hooks",
-      software: ["Premiere Pro", "After Effects"],
+      software: ["Premiere Pro", "After Effects", "DaVinci Resolve"],
       badge: "Motion Editor",
     },
     {

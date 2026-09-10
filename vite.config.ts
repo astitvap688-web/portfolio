@@ -13,7 +13,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), viteSingleFile()],
   server: {
     watch: {
-      ignored: ["**/REELS/**", "**/public/reels/**", "**/*.mp4"],
+      ignored: ["**/REELS/**"],
     },
   },
   resolve: {
@@ -22,4 +22,4 @@ export default defineConfig({
     },
   },
 });
-// Vite server config reloaded
+// Vite server config reloaded - public reels indexed
